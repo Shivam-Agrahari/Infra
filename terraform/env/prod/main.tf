@@ -28,6 +28,6 @@ module "lambda_iam" {
 module "lambda" {
   source               = "../../modules/lambda"
   sns_topic_arn        = module.sns.topic_arn
-  lambda_role_arn      = module.iam_lambda.lambda_role_arn   # <-- updated here
+  lambda_role_arn      = module.lambda_iam.lambda_role_arn   # <-- updated here
   eventbridge_rule_arn = module.eventbridge.rule_arn
 }
