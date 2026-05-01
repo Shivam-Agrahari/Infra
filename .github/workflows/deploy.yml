@@ -22,9 +22,15 @@ jobs:
 
       - uses: hashicorp/setup-terraform@v2
 
-      - run: terraform init
-        working-directory: terraform/prod/env
-      - run: terraform plan
-        working-directory: terraform/prod/env
-      - run: terraform apply -auto-approve
+      - name: Terraform Init
+        run: terraform init
         working-directory: terraform/env/prod
+
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+        working-directory: terraform/env/prod
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan
+        working-directory: terraform/env/prod
+
