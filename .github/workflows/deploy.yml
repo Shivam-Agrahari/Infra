@@ -1,8 +1,12 @@
 name: Deploy Terraform
 
 on:
-  push:
-    branches: [ "main" ]
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Terraform action (apply or destroy)'
+        required: true
+        default: 'apply'
 
 jobs:
   terraform:
@@ -10,6 +14,10 @@ jobs:
     permissions:
       id-token: write   # Required for OIDC
       contents: read
+
+    defaults:
+      run:
+        working-directory: Infra/terraform/env/prod
 
     steps:
       - uses: actions/checkout@v3
@@ -24,13 +32,14 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-        working-directory: terraform/env/prod
 
       - name: Terraform Plan
         run: terraform plan -out=tfplan
-        working-directory: terraform/env/prod
 
-      - name: Terraform Apply
-        run: terraform apply -auto-approve tfplan
-        working-directory: terraform/env/prod
-
+      - name: Terraform Action
+        run: |
+          if [ "${{ github.event.inputs.action }}" = "destroy" ]; then
+            terraform destroy -auto-approve
+          else
+            terraform apply -auto-approve tfplan
+          fi
