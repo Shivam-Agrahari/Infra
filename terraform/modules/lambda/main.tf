@@ -1,15 +1,16 @@
 data "archive_file" "lambda_zip" {
   type        = "zip"
-  source_dir  = "${path.root}/../../Infra/lambda"         # path to your source code folder
-  output_path = "${path.module}/lambda.zip"   # where Terraform will write the zip
+  # From terraform/env/prod, go up two levels to Infra/lambda
+  source_dir  = "${path.root}/../../../lambda"
+  output_path = "${path.module}/lambda.zip"
 }
 
 resource "aws_lambda_function" "notifier" {
-  function_name = "notifier"
-  role          = var.lambda_role_arn
-  handler       = "index.handler"             # index.py with handler() function
-  runtime       = "python3.9"
+  function_name    = "notifier"
+  role             = var.lambda_role_arn
+  handler          = "index.handler"
+  runtime          = "python3.9"
 
-  filename      = data.archive_file.lambda_zip.output_path
+  filename         = data.archive_file.lambda_zip.output_path
   source_code_hash = data.archive_file.lambda_zip.output_base64sha256
 }
