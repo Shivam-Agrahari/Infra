@@ -34,9 +34,6 @@ jobs:
 
       - uses: hashicorp/setup-terraform@v2
 
-      - name: Debug environment folder
-        run: ls -l terraform/env/${{ github.event.inputs.environment }}
-
       - name: Terraform Init
         run: terraform init
 
