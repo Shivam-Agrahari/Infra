@@ -17,7 +17,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: terraform/Env/Test   # ✅ remove extra "Infra"
+        working-directory: terraform/env/Test   # ✅ remove extra "Infra"
 
     steps:
       - uses: actions/checkout@v3
