@@ -10,7 +10,7 @@ on:
       environments:
         description: 'Environment to target (EMEA, APAC, NAM, Test)'
         required: true
-        default: 'Test'
+        default: 'prod'
 
 jobs:
   terraform:
@@ -21,7 +21,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: terraform/env/${{ github.event.inputs.environment }}   # ✅ 
+        working-directory: terraform/env/prod   # ✅ 
 
     steps:
       - uses: actions/checkout@v3
