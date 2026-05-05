@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       action:
-        description: 'Terraform action (Plan, Apply, Destroy)'
+        description: 'Terraform action (Plan, Deploy, Destroy)'
         required: true
         default: 'apply'
       environments:
@@ -38,13 +38,13 @@ jobs:
         run: terraform init
 
       - name: Terraform Plan
-        if: github.event.inputs.action == 'plan'
+        if: github.event.inputs.action == 'Plan'
         run: terraform plan 
 
       - name: Terraform Apply
-        if: github.event.inputs.action == 'apply'
+        if: github.event.inputs.action == 'Deploy'
         run: terraform apply -auto-approve 
 
       - name: Terraform Destroy
-        if: github.event.inputs.action == 'destroy'
+        if: github.event.inputs.action == 'Destroy'
         run: terraform destroy -auto-approve
