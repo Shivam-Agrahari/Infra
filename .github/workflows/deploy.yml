@@ -21,7 +21,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: terraform/env/${{ github.event.inputs.environment }}  # ✅ 
+        working-directory: terraform/env/${{ github.event.inputs.environments }}  # ✅ 
 
     steps:
       - uses: actions/checkout@v3
