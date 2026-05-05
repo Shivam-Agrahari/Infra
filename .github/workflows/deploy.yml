@@ -4,9 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       action:
-        description: 'Terraform action (apply or destroy)'
+        description: 'Terraform action (Plan, Apply, Destroy)'
         required: true
         default: 'apply'
+      environments:
+        description: 'Environment to target (EMEA, APAC, NAM, Test)'
+        required: true
+        default: 'Test'
 
 jobs:
   terraform:
@@ -17,7 +21,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: terraform/env/Test   # ✅ remove extra "Infra"
+        working-directory: terraform/env/${{ github.event.inputs.environment }}   # ✅ 
 
     steps:
       - uses: actions/checkout@v3
@@ -34,12 +38,13 @@ jobs:
         run: terraform init
 
       - name: Terraform Plan
+        if: github.event.inputs.action == 'plan'
         run: terraform plan -out=tfplan
 
-      - name: Terraform Action
-        run: |
-          if [ "${{ github.event.inputs.action }}" = "destroy" ]; then
-            terraform destroy -auto-approve
-          else
-            terraform apply -auto-approve tfplan
-          fi
+      - name: Terraform Apply
+        if: github.event.inputs.action == 'apply'
+        run: terraform apply -auto-approve tfplan
+
+      - name: Terraform Destroy
+        if: github.event.inputs.action == 'destroy'
+        run: terraform destroy -auto-approve
